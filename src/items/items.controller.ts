@@ -17,11 +17,6 @@ export class ItemsController {
   async findAll(): Promise<Item[]> {
     return this.itemsService.findAll();
   }
-
-  //   @Get(':id')
-  //   findOne(@Param() param): string {
-  //     return `This is the page of item number ${param.id}`;
-  //   }
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<Item> {
     return this.itemsService.findOne(id);

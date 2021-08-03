@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Item } from './interfaces/item.interface';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { NotFoundException } from '@nestjs/common/exceptions';
 @Injectable()
 export class ItemsService {
   constructor(@InjectModel('Item') private readonly itemModel: Model<Item>) {}
@@ -10,7 +11,13 @@ export class ItemsService {
   }
 
   async findOne(id: string): Promise<Item> {
-    return await this.itemModel.findOne({ _id: id });
+    const itemFound = await this.itemModel.findOne({ _id: id });
+    if (!itemFound) {
+      throw new NotFoundException(
+        `The item with this id ${id} not found. Please enter the correct id`,
+      );
+    }
+    return itemFound;
   }
 
   async create(item: Item): Promise<Item> {
@@ -19,6 +26,12 @@ export class ItemsService {
   }
 
   async delete(id: string): Promise<Item> {
+    const itemFound = await this.itemModel.findById(id);
+    if (!itemFound) {
+      throw new NotFoundException(
+        `The item with this id ${id} already not exists. Please enter the correct id`,
+      );
+    }
     return await this.itemModel.findByIdAndDelete(id);
   }
 
