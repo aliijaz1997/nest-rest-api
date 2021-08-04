@@ -6,7 +6,9 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { Item } from './interfaces/item.interface';
 import { ItemsService } from './items.service';
 
@@ -23,16 +25,19 @@ export class ItemsController {
   }
 
   @Post()
+  @UseGuards(AuthGuard())
   create(@Body() createItemDto: Item): Promise<Item> {
     return this.itemsService.create(createItemDto);
   }
 
   @Delete(':id')
+  @UseGuards(AuthGuard())
   delete(@Param('id') id: string): Promise<Item> {
     return this.itemsService.delete(id);
   }
 
   @Put(':id')
+  @UseGuards(AuthGuard())
   update(@Body() updateItemDto: Item, @Param('id') id: string): Promise<Item> {
     return this.itemsService.update(id, updateItemDto);
   }
