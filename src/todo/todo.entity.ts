@@ -1,4 +1,10 @@
-import { IsEnum, IsString, MaxLength, MinLength } from 'class-validator';
+import {
+  IsEnum,
+  IsNotEmpty,
+  IsString,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
 export enum Status {
   DONE = 'DONE',
   NOT_DONE = 'NOT_DONE',
@@ -16,4 +22,7 @@ export class TODO {
 
   @IsEnum(Status)
   status: Status;
+
+  @IsNotEmpty()
+  userId: string;
 }

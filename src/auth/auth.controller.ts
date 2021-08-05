@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { User } from './Interface/auth.interface';
@@ -19,9 +28,8 @@ export class AuthController {
     return this.authService.loginUser(createUser);
   }
 
-  @Post('/test')
-  @UseGuards(AuthGuard())
-  async test(@Req() req) {
-    console.log(req, 'This is request');
+  @Delete(':id')
+  DeleteTodo(@Param('id') id: string) {
+    return this.authService.Delete(id);
   }
 }

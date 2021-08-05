@@ -27,4 +27,8 @@ export class AuthService {
     }
     throw new UnauthorizedException('Invalid username or password');
   }
+
+  async Delete(id: string): Promise<User> {
+    return await this.userModel.findByIdAndDelete(id);
+  }
 }
