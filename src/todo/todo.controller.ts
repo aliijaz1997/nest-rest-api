@@ -17,7 +17,7 @@ import { TodoService } from './todo.service';
 export class TodoController {
   constructor(private todoService: TodoService) {}
   @Get('all')
-  GetAllTodos(): Promise<TODO[]> {
+  GetTodos(): Promise<TODO[]> {
     return this.todoService.findAll();
   }
 

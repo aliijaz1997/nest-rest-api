@@ -16,7 +16,7 @@ export class TodoService {
     const task = new TODO();
     task.title = title;
     task.description = description;
-    task.status = Status.DONE;
+    task.status = Status.NOT_DONE;
     return await new this.todoModel(task).save();
   }
 
