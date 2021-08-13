@@ -1,6 +1,5 @@
 import {
   Body,
-  ClassSerializerInterceptor,
   Controller,
   Delete,
   Get,
@@ -8,30 +7,37 @@ import {
   Post,
   Put,
   UseGuards,
-  UseInterceptors,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { query } from 'express';
 import { getUser } from 'src/auth/getuser-decorator';
-import { User } from 'src/auth/Interface/auth.interface';
 import { createTodoDto } from './dto/task.dto';
 import { Status, TODO } from './todo.entity';
 import { TodoService } from './todo.service';
+import { Logger } from '@nestjs/common';
+import { resolveSoa } from 'dns';
 
 @Controller('todo')
 export class TodoController {
+  private logger = new Logger('Todo Controller');
   constructor(private todoService: TodoService) {}
-  // @UseInterceptors(ClassSerializerInterceptor)
   @Get('all')
-  GetTodos(): Promise<TODO[]> {
-    return this.todoService.findAll();
+  @UseGuards(AuthGuard())
+  GetTodos(@getUser() userId: string): Promise<TODO[]> {
+    this.logger.verbose(
+      `The user with userId = ${userId} is retrieving all tasks`,
+    );
+    return this.todoService.findAll(userId);
   }
-  // @UseInterceptors(ClassSerializerInterceptor)
   @Post('create')
   @UseGuards(AuthGuard())
   CreateTodo(
     @Body() item: createTodoDto,
     @getUser() userId: string,
   ): Promise<TODO> {
+    this.logger.verbose(`
+    User with id = ${userId} is retrieving task = ${JSON.stringify(item)}
+    `);
     return this.todoService.create(item, userId);
   }
 

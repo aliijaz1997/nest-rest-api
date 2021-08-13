@@ -1,14 +1,26 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { createTodoDto } from './dto/task.dto';
 import { Status, TODO } from './todo.entity';
+import { Logger } from '@nestjs/common';
 
 @Injectable()
 export class TodoService {
+  private logger = new Logger('TodoService');
   constructor(@InjectModel('Todo') private todoModel: Model<TODO>) {}
-  async findAll(): Promise<TODO[]> {
-    return await this.todoModel.find();
+  async findAll(userId: string): Promise<TODO[]> {
+    console.log(userId);
+
+    if (!userId) {
+      this.logger.error(`Failed to fetch the todos of user : ${userId}`);
+      throw new NotFoundException('Please sign in first');
+    }
+    return await this.todoModel.find({ userId });
   }
 
   async create(createTodo: createTodoDto, userId: string): Promise<TODO> {
